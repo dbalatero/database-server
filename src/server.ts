@@ -10,6 +10,12 @@ export const createServer = () => {
   app.get("/set", (req, res) => {
     let total = 0;
 
+    if (Object.keys(req.query).length === 0) {
+      return res
+        .status(400)
+        .send(`/set requires at least 1 ?key=value pair in the query params`);
+    }
+
     for (const key in req.query) {
       const value = req.query[key];
 
@@ -24,6 +30,10 @@ export const createServer = () => {
 
   app.get("/get", (req, res) => {
     const { key } = req.query;
+
+    if (!key) {
+      return res.status(400).send("Missing a `key`");
+    }
 
     if (typeof key !== "string") {
       return res.status(400).send("key needs to be a string!");
