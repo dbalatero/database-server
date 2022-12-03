@@ -8,12 +8,27 @@ export const createServer = () => {
   // This should semantically be a PUT method, but for ease of testing and the
   // prompt's ambiguity, I'll leave it as a GET method for now.
   app.get("/set", (req, res) => {
+    res.type("txt"); // text/plain
+
     let total = 0;
 
     if (Object.keys(req.query).length === 0) {
       return res
         .status(400)
         .send(`/set requires at least 1 ?key=value pair in the query params`);
+    }
+
+    // Validate the keys
+    for (const key in req.query) {
+      const value = req.query[key];
+
+      if (value && typeof value !== "string") {
+        return res
+          .status(400)
+          .send(
+            `This API only supports simple string ?key=value pairs. \`${key}\` is an invalid key.`
+          );
+      }
     }
 
     for (const key in req.query) {
@@ -29,6 +44,8 @@ export const createServer = () => {
   });
 
   app.get("/get", (req, res) => {
+    res.type("txt"); // text/plain
+
     const { key } = req.query;
 
     if (!key) {
