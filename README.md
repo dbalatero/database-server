@@ -57,3 +57,10 @@ bar
 ```
 
 This endpoint will return `404 Not Found` if the key does not exist in the database.
+
+## Running the tests
+
+```bash
+# Starts Jest in watch mode
+yarn test
+```
